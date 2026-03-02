@@ -8,6 +8,8 @@
     <style>
         :root {
             --primary: #ff4d6d;
+            --pink-ribbon: #ff758f;
+            --envelope-color: #fdfaf7;
             --white: #ffffff;
             --bg-gradient: radial-gradient(circle at center, #1b1015 0%, #050505 100%);
         }
@@ -27,62 +29,71 @@
 
         #starField { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
 
+        /* BATIMENTO (SEM ALTERAÇÃO) */
         .heart-svg { overflow: visible; filter: drop-shadow(0 0 10px var(--primary)); width: 250px; margin: 20px 0; }
         .svg-line { fill: none; stroke: var(--primary); stroke-width: 2; stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: dash-anim 4s linear infinite; }
         .svg-heart { fill: var(--primary); transform-origin: center; animation: blink-anim 4s linear infinite; }
-
         @keyframes dash-anim { 0% { stroke-dashoffset: 1000; } 80%, 100% { stroke-dashoffset: 0; } }
         @keyframes blink-anim { 0%, 65% { opacity: 0; transform: scale(0); } 75%, 85% { opacity: 1; transform: scale(1.2); } 80% { transform: scale(1.0); } 95%, 100% { opacity: 0; } }
 
+        /* PÁGINAS (SEM ALTERAÇÃO) */
         .page { 
             position: absolute; width: 100%; padding: 20px; 
-            text-align: center; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
+            text-align: center; transition: 0.5s; 
             display: flex; flex-direction: column; align-items: center;
             opacity: 0; pointer-events: none; z-index: 5;
-            max-width: 600px;
         }
         .page.active { opacity: 1; pointer-events: all; z-index: 10; }
+        h1 { font-family: 'Dancing Script', cursive; font-size: 2.5rem; text-shadow: 0 0 15px var(--primary); margin-bottom: 10px; }
+        .phrase { font-size: 1.1rem; line-height: 1.5; font-style: italic; max-width: 85%; margin-bottom: 20px; }
 
-        h1 { font-family: 'Dancing Script', cursive; font-size: clamp(2rem, 6vw, 2.5rem); text-shadow: 0 0 15px var(--primary); margin-bottom: 10px; }
-        h2 { font-family: 'Dancing Script', cursive; font-size: clamp(1.8rem, 5vw, 2.2rem); color: var(--primary); margin-bottom: 15px; }
-        
-        .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; max-width: 320px; margin: 15px 0; }
-        .photo-item { 
-            width: 100%; aspect-ratio: 1/1; object-fit: cover; 
-            border: 3px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.5); 
-            transition: 0.4s; cursor: pointer; 
+        /* ENVELOPE BONITO (SÓ O QUE FOI MEXIDO) */
+        .envelope-wrapper { 
+            position: relative; width: 300px; height: 180px; margin-top: 40px; cursor: pointer; 
+            filter: drop-shadow(0 10px 30px rgba(0,0,0,0.5));
         }
-        .photo-item:nth-child(odd) { transform: rotate(-3deg); }
-        .photo-item:nth-child(even) { transform: rotate(3deg); }
-        .photo-item.zoom { 
-            transform: scale(1.8) rotate(0deg) !important; 
-            position: fixed; top: 50%; left: 50%; 
-            width: 90vw; max-width: 400px;
-            transform: translate(-50%, -50%);
-            z-index: 1000; box-shadow: 0 0 50px rgba(0,0,0,0.8);
+        .envelope { 
+            position: absolute; width: 100%; height: 100%; 
+            background: var(--envelope-color); 
+            border-radius: 0 0 12px 12px; z-index: 10; transition: 0.5s;
+            box-shadow: inset 0 -5px 15px rgba(0,0,0,0.05);
         }
-
-        .envelope-wrapper { position: relative; width: 280px; height: 160px; margin-top: 40px; cursor: pointer; }
-        .envelope { position: absolute; width: 100%; height: 100%; background: #d1d1d1; border-radius: 0 0 8px 8px; z-index: 10; transition: 0.5s; }
-        .flap { position: absolute; top: 0; border-left: 140px solid transparent; border-right: 140px solid transparent; border-top: 100px solid #e5e5e5; transition: 0.5s; z-index: 15; transform-origin: top; }
-        
-        .seal { 
-            position: absolute; top: 70px; left: 50%; transform: translateX(-50%);
-            width: 70px; height: 70px; background: var(--primary); 
-            clip-path: path('M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z');
-            z-index: 20; transition: 0.4s;
+        .flap { 
+            position: absolute; top: 0; border-left: 150px solid transparent; 
+            border-right: 150px solid transparent; border-top: 110px solid #ece6e0; 
+            transition: 0.5s; z-index: 15; transform-origin: top;
         }
 
+        /* FITA E LAÇO */
+        .ribbon {
+            position: absolute; top: 50%; width: 100%; height: 25px;
+            background: var(--pink-ribbon); z-index: 16; transform: translateY(-50%);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .bow {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 30px; height: 25px; background: var(--pink-ribbon); z-index: 17; border-radius: 4px;
+        }
+        .bow::before, .bow::after {
+            content: ''; position: absolute; width: 30px; height: 30px;
+            border: 6px solid var(--pink-ribbon); border-radius: 50% 50% 0 50%;
+            top: -12px; left: -22px; transform: rotate(45deg);
+        }
+        .bow::after { border-radius: 50% 50% 50% 0; left: 16px; transform: rotate(-45deg); }
+
+        /* CARTA */
         .letter { 
-            position: absolute; bottom: 5px; left: 5%; width: 90%; height: 120px; 
-            background: #fff; border-radius: 5px; padding: 25px; color: #333; 
-            text-align: left; transition: all 0.8s ease; z-index: 5; opacity: 0; pointer-events: none;
+            position: absolute; bottom: 5px; left: 5%; width: 90%; height: 130px; 
+            background: #fff; border-radius: 5px; padding: 30px 20px; color: #333; 
+            text-align: left; transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); z-index: 5; opacity: 0; pointer-events: none;
         }
         
-        .is-open .envelope, .is-open .flap, .is-open .seal { opacity: 0; transform: translateY(50px) scale(0.5); pointer-events: none; }
+        .is-open .envelope, .is-open .flap, .is-open .ribbon, .is-open .bow { 
+            opacity: 0; transform: translateY(50px) scale(0.5); pointer-events: none; 
+        }
         .is-open .letter { 
             opacity: 1; pointer-events: all; position: fixed; top: 50%; left: 50%;
-            transform: translate(-50%, -50%); width: 90vw; height: auto; max-width: 400px;
+            transform: translate(-50%, -50%); width: 90vw; height: 75vh; max-width: 400px;
             z-index: 1000; box-shadow: 0 0 50px rgba(0,0,0,0.8);
         }
 
@@ -109,47 +120,34 @@
     <section class="page" id="p4"><p class="phrase">"Obrigado por ser meu porto seguro e por transformar meus sorrisos em algo mais verdadeiro."</p><button class="btn" onclick="goTo(5)">Seguir</button></section>
     <section class="page" id="p5"><p class="phrase">"Você é o meu pensamento favorito em todos os momentos do dia."</p><button class="btn" onclick="goTo(6)">Mais um pouco</button></section>
     <section class="page" id="p6"><p class="phrase">"Eu amo a nossa história e o jeito que a gente se encaixa perfeitamente."</p><button class="btn" onclick="goTo(7)">Quase lá...</button></section>
-    <section class="page" id="p7"><p class="phrase">"Que o nosso amor continue crescendo e transbordando luz por onde a gente passar."</p><button class="btn" onclick="goTo(8)">Eu te amo</button></section>
-
-    <section class="page" id="p8">
-        <h1>Eu amo essa garota💕</h1>
-        <div class="photo-grid">
-            <img src="MARI1.jpeg.jpeg" class="photo-item" alt="Mariani 1" onclick="toggleZoom(this)">
-            <img src="MARI2.jpeg.jpeg" class="photo-item" alt="Mariani 2" onclick="toggleZoom(this)">
-            <img src="MARI3.jpeg.jpeg" class="photo-item" alt="Mariani 3" onclick="toggleZoom(this)">
-            <img src="MARI4.jpeg.jpeg" class="photo-item" alt="Mariani 4" onclick="toggleZoom(this)">
-        </div>
-        <p style="font-size: 0.7rem; opacity: 0.5;">(Toque para ampliar)</p>
-        <button class="btn" onclick="goTo(9)">Ler minha carta</button>
+    
+    <section class="page" id="p7">
+        <p class="phrase">"Que o nosso amor continue crescendo e transbordando luz por onde a gente passar."</p>
+        <button class="btn" onclick="goTo(8)">Abrir surpresa</button>
     </section>
 
-    <section class="page" id="p9">
+    <section class="page" id="p8">
         <div class="envelope-wrapper" onclick="this.classList.toggle('is-open')">
             <div class="flap"></div>
-            <div class="seal"></div>
+            <div class="ribbon"></div>
+            <div class="bow"></div>
             <div class="envelope"></div>
             <div class="letter">
                 <div class="letter-content">
                     <h2 style="font-family:'Dancing Script'; color:var(--primary); margin-bottom:15px; font-size: 2.2rem;">Minha Mariani,</h2>
-                    <p style="font-size:1rem; line-height:1.6; color: #333;">
+                    <p style="font-size:1.05rem; line-height:1.7; color: #333;">
                         Completar 4 meses com você é a prova de que a distância é apenas um detalhe quando o amor é verdadeiro. <br><br>
                         Mesmo longe, você é a pessoa mais presente na minha vida. Obrigado por cada quilômetro que a gente vence com paciência e carinho. <br><br>
-                        Você é a minha paz, o meu porto seguro e a dona do meu coração, não importa a distância que nos separe.<br><br>
-                        <b>Te amo hoje, amanhã e para sempre! ❤️</b>
+                        Você é a minha paz, o meu porto seguro e a dona do meu coração.<br><br>
+                        <b style="font-size: 1.5rem; color: var(--primary); text-shadow: 0 0 10px rgba(255, 77, 109, 0.4);">Eu te amo! ❤️</b>
                     </p>
                 </div>
             </div>
         </div>
-        <p style="margin-top: 40px; font-size: 0.8rem; opacity: 0.6;">Toque no coração para abrir</p>
+        <p style="margin-top: 40px; font-size: 0.8rem; opacity: 0.6;">Toque no envelope para abrir</p>
     </section>
 
     <script>
-        function toggleZoom(el) {
-            const isZoomed = el.classList.contains('zoom');
-            document.querySelectorAll('.photo-item').forEach(img => img.classList.remove('zoom'));
-            if (!isZoomed) el.classList.add('zoom');
-        }
-
         function goTo(num) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             setTimeout(() => { document.getElementById(`p${num}`).classList.add('active'); }, 100);
